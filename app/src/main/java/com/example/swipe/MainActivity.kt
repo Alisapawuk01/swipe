@@ -3,12 +3,27 @@ package com.example.swipe
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.example.swipe.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val db = MainDb.getDb(this)
+        binding.button.setOnClickListener {
+            val item = Item(null,
+                binding.edtext.text.toString()
+            )
+            Thread {
+                db.getDao().InsertItem(item)
+
+            }.start()
+
+           }
+        }
+
     override fun onStart() {
         super.onStart()
         Log.d("MyLogMAct", "onStart" )

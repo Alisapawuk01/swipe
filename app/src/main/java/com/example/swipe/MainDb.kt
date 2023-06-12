@@ -8,6 +8,7 @@ import androidx.room.util.readVersion
 
 @Database (entities = [Item::class], version = 1)
 internal abstract class MainDb : RoomDatabase() {
+    abstract fun getDao(): Dao
 
     companion object {
         fun getDb(context: Context): MainDb {
