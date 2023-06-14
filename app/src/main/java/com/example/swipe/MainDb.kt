@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.util.readVersion
 
-@Database (entities = [Item::class], version = 1)
+@Database (entities = [TodoList::class, ItemList::class], version = 1)
 internal abstract class MainDb : RoomDatabase() {
     abstract fun getDao(): Dao
 
@@ -15,7 +15,7 @@ internal abstract class MainDb : RoomDatabase() {
             return Room.databaseBuilder(
                 context.applicationContext,
                 MainDb::class.java,
-                name = "test.db"
+                name = "test3.db"
             ).build()
         }
     }

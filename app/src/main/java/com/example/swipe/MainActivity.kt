@@ -3,6 +3,7 @@ package com.example.swipe
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.asLiveData
 import com.example.swipe.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -12,13 +13,28 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val db = MainDb.getDb(this)
+        db.getDao().getAllItem().asLiveData().observe(this) {list->
+            binding.textView.text = ""
+            list.forEach {
+                val text = "Id: ${it.todoList.todoListId} Name: ${it.todoList.name}\n"
+                binding.textView.append(text)
+                it.textlist.forEach{ it1 ->
+                    val text2 = "Id: ${it1.itemListId} id2: ${it1.userCreatorId} Name: ${it1.item}\n"
+                    binding.textView.append(text2)
+                }
+           }
+        }
+
         binding.button.setOnClickListener {
-            val item = Item(null,
+            val item = TodoList( name=
                 binding.edtext.text.toString()
             )
-            Thread {
-                db.getDao().InsertItem(item)
 
+            Thread {
+                val id = db.getDao().insertItem(item)
+                val itemtext = ItemList(userCreatorId =  id, item = "test1")
+                val itemtext2 = ItemList(userCreatorId =  id, item =  "test2")
+                db.getDao().insertReminder(itemtext, itemtext2)
             }.start()
 
            }
