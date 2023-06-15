@@ -1,5 +1,6 @@
 package com.example.swipe
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -26,17 +27,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.button.setOnClickListener {
-            val item = TodoList( name=
-                binding.edtext.text.toString()
-            )
-
-            Thread {
-                val id = db.getDao().insertItem(item)
-                val itemtext = ItemList(userCreatorId =  id, item = "test1")
-                val itemtext2 = ItemList(userCreatorId =  id, item =  "test2")
-                db.getDao().insertReminder(itemtext, itemtext2)
-            }.start()
-
+//            val item = TodoList( name=
+//                binding.edtext.text.toString()
+//            )
+//
+//            Thread {
+//                val id = db.getDao().insertItem(item)
+//                val itemtext = ItemList(userCreatorId =  id, item = "test1")
+//                val itemtext2 = ItemList(userCreatorId =  id, item =  "test2")
+//                db.getDao().insertReminder(itemtext, itemtext2)
+//            }.start()
+            val intent = Intent(".ActivityPage2")
+            startActivity(intent)
            }
         }
 
