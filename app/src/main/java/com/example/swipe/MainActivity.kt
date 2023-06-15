@@ -1,5 +1,6 @@
 package com.example.swipe
 
+import android.app.Application
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import com.example.swipe.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    var insertedIndex = 0L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -27,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.button.setOnClickListener {
-//            val item = TodoList( name=
-//                binding.edtext.text.toString()
-//            )
+            val item = TodoList( name=
+                "ListNameIdx${insertedIndex}"
+            )
 //
 //            Thread {
 //                val id = db.getDao().insertItem(item)
@@ -37,7 +39,11 @@ class MainActivity : AppCompatActivity() {
 //                val itemtext2 = ItemList(userCreatorId =  id, item =  "test2")
 //                db.getDao().insertReminder(itemtext, itemtext2)
 //            }.start()
+            Thread {
+                insertedIndex = db.getDao().insertItem(item)
+            }.start()
             val intent = Intent(".ActivityPage2")
+            intent.putExtra("globalIndexList", insertedIndex)
             startActivity(intent)
            }
         }
