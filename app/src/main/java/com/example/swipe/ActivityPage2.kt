@@ -33,6 +33,7 @@ class ActivityPage2 : AppCompatActivity() {
                     val itemtext = ItemList(userCreatorId = globalIndexList, item = task.text)
                     db.getDao().insertReminder(itemtext)
                 }.start()
+                editText.text.clear()
             }
         }
     }
