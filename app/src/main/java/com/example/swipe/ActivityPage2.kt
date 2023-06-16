@@ -20,7 +20,7 @@ class ActivityPage2 : AppCompatActivity() {
     private var listIndex = 0L
     private fun init() {
         val db = MainDb.getDb(this)
-
+        val globalID = getIntent().getExtras()!!.getString("globalIndexList")
         taskBinding.apply {
             recViewP2.layoutManager = GridLayoutManager(this@ActivityPage2, 2)
             recViewP2.adapter = taskAdapter
@@ -30,7 +30,7 @@ class ActivityPage2 : AppCompatActivity() {
                 listIndex += 1
 
                 Thread {
-                    val itemtext = ItemList(userCreatorId = globalIndexList, item = task.text)
+                    val itemtext = ItemList(userCreatorId = (globalID?.toLong()!! + 1) ?: 1, item = task.text)
                     db.getDao().insertReminder(itemtext)
                 }.start()
                 editText.text.clear()

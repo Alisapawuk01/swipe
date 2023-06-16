@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
                 insertedIndex = db.getDao().insertItem(item)
             }.start()
             val intent = Intent(".ActivityPage2")
-            intent.putExtra("globalIndexList", insertedIndex)
+            intent.putExtra("globalIndexList", insertedIndex.toString())
             startActivity(intent)
            }
         }
