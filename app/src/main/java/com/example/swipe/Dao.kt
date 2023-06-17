@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
-import com.example.swipe.TodoList
 
 @Dao
 interface Dao {
@@ -18,4 +17,6 @@ interface Dao {
     @Query("SELECT * FROM todo_list")
     fun getAllItem(): Flow<List<TodoWithItems>>
 
+    @Query("SELECT * FROM todo_list WHERE todoListId == :indexList")
+    fun getAllItemsById(indexList : Long) : Array<TodoWithItems>
 }

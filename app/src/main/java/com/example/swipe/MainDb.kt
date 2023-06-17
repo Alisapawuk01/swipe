@@ -16,7 +16,7 @@ internal abstract class MainDb : RoomDatabase() {
                 context.applicationContext,
                 MainDb::class.java,
                 name = "test3.db"
-            ).build()
+            ).allowMainThreadQueries().build()
         }
     }
 }

@@ -29,6 +29,11 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskHolder>() {
         holder.bind(taskList[position])
     }
 
+    public fun ClearTaskItem()
+    {
+        taskList.clear()
+        notifyDataSetChanged()
+    }
     public fun AddTaskItem(task: Task) {
         taskList.add(task)
         notifyItemInserted(taskList.size - 1)
