@@ -30,7 +30,7 @@ class ActivityPage2 : AppCompatActivity() {
         {
             for (subItem in item.textlist)
             {
-                val task = Task(subItem.item, 0)
+                val task = Task(subItem.item, 0, subItem.itemListId)
                 taskAdapter.AddTaskItem(task)
             }
         }
@@ -39,13 +39,14 @@ class ActivityPage2 : AppCompatActivity() {
             recViewP2.layoutManager = GridLayoutManager(this@ActivityPage2, 2)
             recViewP2.adapter = taskAdapter
             AddTaskBtn.setOnClickListener {
-                val task = Task(editText.text.toString(), 0)
-                taskAdapter.AddTaskItem(task)
+                var task = Task(editText.text.toString(), 0, 0 )
                 listIndex += 1
 
                 Thread {
                     val itemtext = ItemList(userCreatorId = btnIndex, item = task.text)
-                    db.getDao().insertReminder(itemtext)
+                    val textid = db.getDao().insertReminder(itemtext)
+                    task.id = textid
+                    taskAdapter.AddTaskItem(task)
                 }.start()
                 editText.text.clear()
             }

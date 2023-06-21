@@ -3,6 +3,7 @@ package com.example.swipe
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.swipe.databinding.TaskItemBinding
 
@@ -14,6 +15,13 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskHolder>() {
 
         fun bind(newTask : Task) = with(binding) {
             itemTaskText.text = newTask.text
+            val db = MainDb.getDb(itemTaskText.context)
+            deleteBt.setOnClickListener{
+                Toast.makeText(itemTaskText.context, newTask.id.toString(), Toast.LENGTH_SHORT).show()
+                Thread {
+                 db.getDao().deleteItemById(newTask.id)
+                }.start()
+            }
         }
     }
 

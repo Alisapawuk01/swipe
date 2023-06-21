@@ -12,11 +12,14 @@ interface Dao {
     fun insertItem(item: TodoList) : Long
 
     @Insert
-    fun insertReminder(vararg reminder: ItemList)
+    fun insertReminder(reminder: ItemList) : Long
     @Transaction
     @Query("SELECT * FROM todo_list")
     fun getAllItem(): Flow<List<TodoWithItems>>
 
     @Query("SELECT * FROM todo_list WHERE todoListId == :indexList")
     fun getAllItemsById(indexList : Long) : Array<TodoWithItems>
+
+    @Query("DELETE FROM item_list WHERE itemListId == :deleteId")
+    fun deleteItemById(deleteId : Long)
 }
