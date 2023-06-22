@@ -10,6 +10,7 @@ import kotlin.math.max
 class ActivityPage2 : AppCompatActivity() {
     lateinit var taskBinding : ActivityPage2Binding
     private val taskAdapter = TaskAdapter()
+    private var listIndex = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,8 +18,7 @@ class ActivityPage2 : AppCompatActivity() {
         setContentView(taskBinding.root)
         init()
     }
-    public  var globalIndexList = 1L
-    private var listIndex = 0L
+
     private fun init() {
         val db = MainDb.getDb(this)
 
@@ -39,15 +39,13 @@ class ActivityPage2 : AppCompatActivity() {
             recViewP2.layoutManager = GridLayoutManager(this@ActivityPage2, 2)
             recViewP2.adapter = taskAdapter
             AddTaskBtn.setOnClickListener {
-                var task = Task(editText.text.toString(), 0, 0 )
-                listIndex += 1
+                val taskText = editText.text.toString()
+                val itemtext = ItemList(userCreatorId = btnIndex, item = taskText)
 
-                Thread {
-                    val itemtext = ItemList(userCreatorId = btnIndex, item = task.text)
-                    val textid = db.getDao().insertReminder(itemtext)
-                    task.id = textid
-                    taskAdapter.AddTaskItem(task)
-                }.start()
+                listIndex = db.getDao().insertReminder(itemtext)
+
+                val task = Task(taskText, 0, listIndex )
+                taskAdapter.AddTaskItem(task)
                 editText.text.clear()
             }
 
