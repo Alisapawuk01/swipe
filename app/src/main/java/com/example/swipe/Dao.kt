@@ -22,4 +22,7 @@ interface Dao {
 
     @Query("DELETE FROM item_list WHERE itemListId == :deleteId")
     fun deleteItemById(deleteId : Long)
+
+    @Query("DELETE FROM todo_list WHERE todoListId == :index")
+    fun deleteListId(index : Long)
 }

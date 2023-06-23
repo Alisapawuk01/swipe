@@ -1,5 +1,6 @@
 package com.example.swipe
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,11 +36,30 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskListHolder>() {
                 onClickListener!!.onClick(item.taskIndex )
             }
         }
+
+
+        holder.binding.deleteBtn.setOnClickListener {
+            DeleteItem(position, holder.binding.deleteBtn.context)
+        }
     }
 
     public fun ClearTaskList()
     {
         tasks.clear()
+        notifyDataSetChanged()
+    }
+
+    public fun DeleteItem(position: Int, context: Context)
+    {
+        val item = tasks[position]
+        val db = MainDb.getDb(context)
+
+        Thread {
+            db.getDao().deleteListId(item.taskIndex)
+        }.start()
+
+        tasks.removeAt(position)
+
         notifyDataSetChanged()
     }
 
