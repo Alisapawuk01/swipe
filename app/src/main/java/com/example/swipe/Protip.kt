@@ -18,7 +18,7 @@ data class ItemList(
     @PrimaryKey(autoGenerate = true)
     val itemListId: Long = 0,
     val userCreatorId: Long,
-    val item: String
+    var item: String
 )
 
 data class TodoWithItems(

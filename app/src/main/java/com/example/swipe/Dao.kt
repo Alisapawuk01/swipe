@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -25,4 +26,13 @@ interface Dao {
 
     @Query("DELETE FROM todo_list WHERE todoListId == :index")
     fun deleteListId(index : Long)
+
+    @Query("UPDATE item_list SET item=:newItem WHERE itemListId == :id ")
+    fun updateitem(newItem : String, id : Long)
+
+    @Query("SELECT * FROM item_list WHERE itemListId == :todoId")
+        fun getTodoItemById(todoId : Long) : ItemList
+
+        @Update
+        fun updateItem2(item : ItemList)
 }
