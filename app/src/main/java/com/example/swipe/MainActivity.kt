@@ -1,7 +1,10 @@
 package com.example.swipe
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -32,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 //           }
 //        }
 
+        createNotificationChannel()
+
         db.getDao().getAllItem().asLiveData().observe(this) { list->
             taskListAdapter.ClearTaskList()
             list.forEach {
@@ -58,6 +63,18 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("BtnClickIndex", insertedIndex + 1)
             startActivity(intent)
            }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val name: CharSequence = "pawuk channel"
+            val description = "Channel For Alarm Manager"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel( "pawuk", name, importance)
+            channel.description = description
+            val notificationManager = getSystemService(
+                NotificationManager::class.java)
+    }
     }
 
     private fun init()
