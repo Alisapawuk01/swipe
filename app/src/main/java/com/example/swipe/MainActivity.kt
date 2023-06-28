@@ -74,6 +74,9 @@ class MainActivity : AppCompatActivity() {
             channel.description = description
             val notificationManager = getSystemService(
                 NotificationManager::class.java)
+
+            notificationManager.createNotificationChannel(channel)
+
     }
     }
 
@@ -82,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             taskListRV.layoutManager = GridLayoutManager(this@MainActivity, 3)
             taskListRV.adapter = taskListAdapter
+            taskListAdapter.activity = supportFragmentManager
             taskListAdapter.SetOnClickListener(object :
                 TaskListAdapter.OnClickListener {
                 override fun onClick(index : Long) {
