@@ -1,26 +1,39 @@
 package com.example.swipe
 
+import android.app.AlarmManager
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.swipe.databinding.ActivityMainBinding
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     var insertedIndex = 0L
     private val taskListAdapter = TaskListAdapter()
+    private lateinit var picker : MaterialTimePicker
+    private lateinit var calendar: Calendar
+    private lateinit var alarmManager: AlarmManager
+    private lateinit var pendingIntent: PendingIntent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        createNotificationChannel()
         init()
         val db = MainDb.getDb(this)
 //        db.getDao().getAllItem().asLiveData().observe(this) {list->
@@ -35,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 //           }
 //        }
 
-        createNotificationChannel()
+
 
         db.getDao().getAllItem().asLiveData().observe(this) { list->
             taskListAdapter.ClearTaskList()
@@ -66,18 +79,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val name: CharSequence = "pawuk channel"
-            val description = "Channel For Alarm Manager"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel( "pawuk", name, importance)
-            channel.description = description
-            val notificationManager = getSystemService(
-                NotificationManager::class.java)
+        val name: CharSequence = "channel"
+        val description = "Channel For Alarm Manager"
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel( "pawuk", name, importance)
+        channel.description = description
+        channel.enableVibration(true)
+        val notificationManager = getSystemService(
+            NotificationManager::class.java)
 
-            notificationManager.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(channel)
 
-    }
     }
 
     private fun init()
@@ -92,6 +104,42 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(".ActivityPage2")
                     intent.putExtra("BtnClickIndex", index)
                     startActivity(intent)
+                }
+
+                override fun onTimeClick(index : Long) {
+                    calendar = Calendar.getInstance()
+                    calendar.timeInMillis = System.currentTimeMillis()
+                    picker = MaterialTimePicker.Builder()
+                        .setTimeFormat(TimeFormat.CLOCK_24H)
+                        .setHour(calendar[Calendar.HOUR_OF_DAY])
+                        .setMinute(calendar[Calendar.MINUTE])
+                        .setTitleText("Установка времени")
+                        .build()
+
+                    picker.show(supportFragmentManager, "pawuk")
+                    picker.addOnPositiveButtonClickListener {
+
+                        calendar[Calendar.HOUR_OF_DAY] = picker.hour
+                        calendar[Calendar.MINUTE] = picker.minute
+                        calendar[Calendar.SECOND] = 0
+                        calendar[Calendar.MILLISECOND] = 0
+
+//                        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_YEAR), picker.hour, picker.minute, 0)
+
+                        alarmManager = this@MainActivity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        val intent = Intent (this@MainActivity, Notifications::class.java)
+                        intent.putExtra("BtnClickIndex", index)
+                        pendingIntent = PendingIntent.getBroadcast(
+                            this@MainActivity,
+                            0,
+                            intent,
+                            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                        )
+
+                        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,AlarmManager.INTERVAL_DAY, pendingIntent)
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis , pendingIntent)
+
+                    }
                 }
             })
         }

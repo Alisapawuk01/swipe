@@ -59,31 +59,8 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskListHolder>() {
         }
 
         holder.binding.timeBt.setOnClickListener {
-            picker = MaterialTimePicker.Builder()
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .setHour(12)
-                .setMinute(0)
-                .setTitleText("Установка времени")
-                .build()
-
-            picker.show(activity!!, "pawuk")
-            picker.addOnPositiveButtonClickListener {
-                calendar = Calendar.getInstance()
-                calendar[Calendar.HOUR_OF_DAY] = picker.hour
-                calendar[Calendar.MINUTE] = picker.minute
-                calendar[Calendar.SECOND] = 0
-                calendar[Calendar.MILLISECOND] = 0
-                alarmManager = holder.binding.timeBt.context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                val intent = Intent (holder.binding.timeBt.context, ActivityPage2::class.java)
-                pendingIntent = PendingIntent.getBroadcast(
-                    holder.binding.timeBt.context,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_IMMUTABLE
-                )
-                //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.timeInMillis,AlarmManager.INTERVAL_DAY, pendingIntent)
-                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 60 * 1000, pendingIntent)
-
+            if (onClickListener != null) {
+                onClickListener!!.onTimeClick(item.taskIndex )
             }
         }
     }
@@ -121,5 +98,6 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskListHolder>() {
     }
     interface OnClickListener {
         fun onClick(index : Long)
+        fun onTimeClick(index : Long)
     }
 }
