@@ -16,9 +16,11 @@ class Notifications : BroadcastReceiver() {
         Log.d("MyLogMAct", "Notify Received" )
 
         val i =  Intent(context, ActivityPage2::class.java)
-        i.putExtra("BtnClickIndex", intent!!.getLongExtra("BtnClickIndex", 0))
+        val index = intent!!.getLongExtra("BtnClickIndex", 0)
+        Log.d("MyLogMAct", "Notify Received ${index}")
+        i.putExtra("BtnClickIndex", index)
         intent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
         val builder = NotificationCompat.Builder(context!!, "pawuk")
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setContentTitle("Вещи!")
@@ -29,7 +31,7 @@ class Notifications : BroadcastReceiver() {
             .setContentIntent(pendingIntent)
 
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(123, builder.build())
+        notificationManager.notify(index.toInt(), builder.build())
 
 
 
