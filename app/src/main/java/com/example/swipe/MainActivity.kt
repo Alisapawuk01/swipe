@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                         intent.putExtra("BtnClickIndex", index)
                         pendingIntent = PendingIntent.getBroadcast(
                             this@MainActivity,
-                            0,
+                            index.toInt(),
                             intent,
                             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
                         )

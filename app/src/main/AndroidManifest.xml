@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -18,14 +18,17 @@
         android:theme="@style/Theme.Swipe"
         tools:targetApi="31">
         <activity
+            android:name=".MarksActivity"
+            android:exported="false" />
+        <activity
             android:name=".ActivityPage2"
-            android:launchMode="singleTop"
-            android:exported="true">
-        <intent-filter>
-            <action android:name=".ActivityPage2" />
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name=".ActivityPage2" />
 
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
@@ -36,7 +39,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".Notifications"/>
+
+        <receiver android:name=".Notifications" />
     </application>
 
 </manifest>

@@ -31,8 +31,11 @@ interface Dao {
     fun updateitem(newItem : String, id : Long)
 
     @Query("SELECT * FROM item_list WHERE itemListId == :todoId")
-        fun getTodoItemById(todoId : Long) : ItemList
+    fun getTodoItemById(todoId : Long) : ItemList
 
-        @Update
-        fun updateItem2(item : ItemList)
+    @Update
+    fun updateItem2(item : ItemList)
+
+     @Query("SELECT * FROM item_list WHERE userCreatorId == :id ORDER BY itemListId ASC LIMIT :limit OFFSET :offset ")
+     fun getListPage(id: Long, limit: Int, offset: Int) : List<ItemList>
 }

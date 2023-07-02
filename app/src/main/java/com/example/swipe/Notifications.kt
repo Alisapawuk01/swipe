@@ -15,7 +15,7 @@ class Notifications : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d("MyLogMAct", "Notify Received" )
 
-        val i =  Intent(context, ActivityPage2::class.java)
+        val i =  Intent(context, MarksActivity::class.java)
         val index = intent!!.getLongExtra("BtnClickIndex", 0)
         Log.d("MyLogMAct", "Notify Received ${index}")
         i.putExtra("BtnClickIndex", index)
