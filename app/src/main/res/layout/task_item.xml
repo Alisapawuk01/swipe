@@ -34,11 +34,28 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/deleteBt"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Button" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/deleteBt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:insetRight="16dp"
+                    android:text="Delete" />
+
+                <Button
+                    android:id="@+id/cameraBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:insetLeft="8dp"
+                    android:text="Take Picture"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

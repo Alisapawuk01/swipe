@@ -36,6 +36,6 @@ interface Dao {
     @Update
     fun updateItem2(item : ItemList)
 
-     @Query("SELECT * FROM item_list WHERE userCreatorId == :id ORDER BY itemListId ASC LIMIT :limit OFFSET :offset ")
-     fun getListPage(id: Long, limit: Int, offset: Int) : List<ItemList>
+     @Query("SELECT * FROM item_list WHERE userCreatorId == :id ORDER BY itemListId ASC") // LIMIT :limit OFFSET :offset
+     fun getListPage(id: Long) : List<ItemList> //, limit: Int, offset: Int
 }

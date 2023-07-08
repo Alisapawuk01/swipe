@@ -2,37 +2,55 @@ package com.example.swipe
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class MarksActivity : AppCompatActivity() {
-    private val todoItems = arrayOf("Task 1", "Task 2", "Task 3", "Task 4") // пункты списка дел
     private lateinit var listView: ListView
-    private val pageConfig = PagingConfig(pageSize = 1, prefetchDistance = 10, enablePlaceholders = false)
+    private val list = mutableListOf<String>()
+    private val actualList = mutableListOf<String>()
+    private var index = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_marks)
         val db = MainDb.getDb(this)
         val btnIndex = intent.getLongExtra("BtnClickIndex", 0)
-        val pager = Pager(config = pageConfig, pagingSourceFactory = {PageSource(db.getDao(), btnIndex)})
-        val list = mutableListOf<String>()
-        lifecycleScope.launch {
 
+        lifecycleScope.launch {
+            val items = db.getDao().getListPage(btnIndex)
+            items.forEach {
+                list.add(it.item)
+            }
         }
+
+        actualList.add(list.first())
+        index += 1
+
         listView = findViewById(R.id.listView)
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, todoItems)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, actualList)
         listView.adapter = adapter
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE
 
+        val animation = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left)
+        val controller = LayoutAnimationController(animation)
+        listView.layoutAnimation = controller
+        listView.startLayoutAnimation()
+
         listView.setOnItemClickListener { parent, view, position, id ->
-            val selectedTask = todoItems[position]
+            if (index >= list.size) {
+                return@setOnItemClickListener
+            }
+            listView.clearChoices()
+            adapter.clear()
+            adapter.add(list.get(index))
+            index += 1
+            val selectedTask = list[position]
             Toast.makeText(applicationContext, "Selected task: $selectedTask", Toast.LENGTH_SHORT).show()
 
             // Дополнительные действия при выборе пункта в списке

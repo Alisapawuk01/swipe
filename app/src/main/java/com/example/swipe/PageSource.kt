@@ -1,5 +1,6 @@
 package com.example.swipe
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 
@@ -9,7 +10,13 @@ class PageSource (private val itemDao: Dao, private val index: Long) : PagingSou
         val limit = params.loadSize
 
         return try {
-            val items = itemDao.getListPage(index, limit, offset)
+            val items = itemDao.getListPage(index) //, limit, offset
+
+            for (item in items)
+            {
+                Log.d("MyLogMAct", "item {${item.item}" )
+            }
+
             val prevKey = if (offset == 0) null else offset - limit
             val nextKey = offset + limit
 
@@ -19,6 +26,7 @@ class PageSource (private val itemDao: Dao, private val index: Long) : PagingSou
                 nextKey = nextKey
             )
         } catch (e: Exception) {
+            Log.d("MyLogMAct", "NOT WORKING KHE KHE MEOW")
             LoadResult.Error(e)
         }
     }

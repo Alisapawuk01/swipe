@@ -1,11 +1,15 @@
 package com.example.swipe
 
+import android.content.Intent
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat.startActivity
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.RecyclerView
@@ -13,9 +17,10 @@ import com.example.swipe.databinding.TaskItemBinding
 
 class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskHolder>() {
     val taskList = ArrayList<Task>()
+    val CAMERA_REQUEST_CODE = 0
 
     inner class TaskHolder(task: View) : RecyclerView.ViewHolder(task) {
-        val binding = TaskItemBinding.bind(task)
+        private val binding = TaskItemBinding.bind(task)
         var editText = binding.itemTaskText
 
         init {
@@ -27,10 +32,8 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskHolder>() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                val test = taskList[adapterPosition]
                 taskList[adapterPosition].text = p0.toString()
 
-                   // db.getDao().updateitem(p0.toString(), taskList[adapterPosition].id)
             }
 
         } }
@@ -46,6 +49,12 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskHolder>() {
                  db.getDao().deleteItemById(newTask.id)
                 }.start()
             }
+            cameraBtn.setOnClickListener {
+                val callCameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                if (callCameraIntent.resolveActivity(itemTaskText.context.packageManager) != null) {
+                    startActivity(itemTaskText.context, callCameraIntent, null)
+                }
+            }
         }
     }
 
@@ -58,8 +67,8 @@ class TaskAdapter : RecyclerView.Adapter<TaskAdapter.TaskHolder>() {
     override fun getItemCount(): Int = taskList.size
 
     override fun onBindViewHolder(holder: TaskHolder, position: Int) {
-        var item = taskList[position]
-        holder.bind(item)
+        val taskItem = taskList[position]
+        holder.bind(taskItem)
         holder.editText.doAfterTextChanged {
             val db = MainDb.getDb(holder.editText.context)
             val item = db.getDao().getTodoItemById(taskList[position].id)

@@ -1,7 +1,6 @@
 package com.example.swipe
 
 import android.annotation.SuppressLint
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -17,9 +16,8 @@ class Notifications : BroadcastReceiver() {
 
         val i =  Intent(context, MarksActivity::class.java)
         val index = intent!!.getLongExtra("BtnClickIndex", 0)
-        Log.d("MyLogMAct", "Notify Received ${index}")
         i.putExtra("BtnClickIndex", index)
-        intent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT)
         val builder = NotificationCompat.Builder(context!!, "pawuk")
             .setSmallIcon(R.drawable.ic_launcher_background)
